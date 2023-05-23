@@ -1,7 +1,12 @@
+using System.Diagnostics;
 using FragLabs.Audio.Codecs;
 
+
 OpusEncoder _encoder = OpusEncoder.Create(16000, 1, FragLabs.Audio.Codecs.Opus.Application.Voip);
-_encoder.Bitrate = 8192;
+// _encoder.Bitrate = 65536;
+// _encoder.Bitrate = 32768;
+_encoder.Bitrate = 16384;
+// _encoder.Bitrate = 8192;
 OpusDecoder _decoder = OpusDecoder.Create(16000, 1);
 
 // https://stackoverflow.com/questions/44053762/incorrect-argument-using-opus-net-when-encoding
@@ -76,8 +81,7 @@ void EncodeDecodeData(byte[] Buffer, int BytesRecorded)
            bw.Write(dec_buff, 0, len);
         }
     }
-    // Console.WriteLine($"_bytesSent: {_bytesSent}");
-        // buff = _decoder.Decode(buff, len, out len);
+    // Console.WriteLine($"TotalEncodedLength: {_bytesSent}");
 }
 
 // // 40 ms of silence at 16 KHz (1 channel).
@@ -93,6 +97,9 @@ if(File.Exists(destFile))
 
 int bufferLength = 0;
 var sourceFile = "source.raw";
+
+Stopwatch stopWatch = new Stopwatch();
+stopWatch.Start();
 using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
 {
     int Length60Ms = 16*60*2;
@@ -106,7 +113,7 @@ using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
     while ((bytesRead = inFileSteam.Read(buffer, 0, buffer.Length)) > 0)
     {
 #if true
-        Console.WriteLine($"Pcm buffer.Length is: {buffer.Length}");
+        // Console.WriteLine($"Pcm buffer.Length is: {buffer.Length}");
         EncodeDecodeData(buffer, buffer.Length);
 #else
 
@@ -117,7 +124,11 @@ using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
         }
 #endif
     }
-
-Console.WriteLine($"{sourceFile}: {new System.IO.FileInfo(sourceFile).Length} bytes");}
-Console.WriteLine($"{destEncodedDecodedFile}: {new System.IO.FileInfo(destEncodedDecodedFile).Length} bytes");
+}
+Console.WriteLine("RunTime " + stopWatch.Elapsed.Milliseconds);
+stopWatch.Stop();
+Console.WriteLine($"TotalEncodedLength: {_bytesSent}");
+Console.WriteLine($"{sourceFile}: {new System.IO.FileInfo(sourceFile).Length} bytes");
+if(File.Exists(destEncodedDecodedFile))
+    Console.WriteLine($"{destEncodedDecodedFile}: {new System.IO.FileInfo(destEncodedDecodedFile).Length} bytes");
 
