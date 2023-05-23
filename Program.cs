@@ -1,14 +1,8 @@
 using FragLabs.Audio.Codecs;
 
-
-OpusEncoder _encoder;
-OpusDecoder _decoder;
-_encoder = OpusEncoder.Create(16000, 1, FragLabs.Audio.Codecs.Opus.Application.Voip);
-_decoder = OpusDecoder.Create(16000, 1);
+OpusEncoder _encoder = OpusEncoder.Create(16000, 1, FragLabs.Audio.Codecs.Opus.Application.Voip);
 _encoder.Bitrate = 8192;
-
-
-
+OpusDecoder _decoder = OpusDecoder.Create(16000, 1);
 
 // https://stackoverflow.com/questions/44053762/incorrect-argument-using-opus-net-when-encoding
 // 1 Answer
@@ -79,10 +73,10 @@ void EncodeDecodeData(byte[] Buffer, int BytesRecorded)
         using (var fileStream = new FileStream(destEncodedDecodedFile, FileMode.Append, FileAccess.Write, FileShare.None))
         using (var bw = new BinaryWriter(fileStream))
         {
-           bw.Write(dec_buff, 0, dec_buff.Length);
+           bw.Write(dec_buff, 0, len);
         }
     }
-    Console.WriteLine($"_bytesSent: {_bytesSent}");
+    // Console.WriteLine($"_bytesSent: {_bytesSent}");
         // buff = _decoder.Decode(buff, len, out len);
 }
 
@@ -112,8 +106,8 @@ using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
     while ((bytesRead = inFileSteam.Read(buffer, 0, buffer.Length)) > 0)
     {
 #if true
+        Console.WriteLine($"Pcm buffer.Length is: {buffer.Length}");
         EncodeDecodeData(buffer, buffer.Length);
-        Console.WriteLine($"buffer.Length is: {buffer.Length}");
 #else
 
         using (var fileStream = new FileStream(destFile, FileMode.Append, FileAccess.Write, FileShare.None))
