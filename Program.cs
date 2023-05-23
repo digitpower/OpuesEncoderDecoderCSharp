@@ -81,7 +81,6 @@ void EncodeDecodeData(byte[] Buffer, int BytesRecorded)
            bw.Write(dec_buff, 0, len);
         }
     }
-    // Console.WriteLine($"TotalEncodedLength: {_bytesSent}");
 }
 
 // // 40 ms of silence at 16 KHz (1 channel).
@@ -95,7 +94,7 @@ var destFile = "dest.raw";
 if(File.Exists(destFile))
     File.Delete(destFile);
 
-int bufferLength = 0;
+
 var sourceFile = "source.raw";
 
 Stopwatch stopWatch = new Stopwatch();
@@ -104,17 +103,14 @@ using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
 {
     int Length60Ms = 16*60*2;
     int Length40Ms = 16*40*2;
-    bufferLength = bufferLength == 0 ? Length60Ms : (bufferLength == Length60Ms ? Length40Ms : Length60Ms);
-    bufferLength = Length40Ms;
-
-
+    int bufferLength = Length60Ms;
 
     byte[] buffer = new byte[bufferLength];
-    while ((bytesRead = inFileSteam.Read(buffer, 0, buffer.Length)) > 0)
+    while ((bytesRead = inFileSteam.Read(buffer, 0, bufferLength)) > 0)
     {
 #if true
-        // Console.WriteLine($"Pcm buffer.Length is: {buffer.Length}");
-        EncodeDecodeData(buffer, buffer.Length);
+        //Console.WriteLine($"Pcm buffer.Length is: {bytesRead}");
+        EncodeDecodeData(buffer, bytesRead);
 #else
 
         using (var fileStream = new FileStream(destFile, FileMode.Append, FileAccess.Write, FileShare.None))
@@ -123,6 +119,7 @@ using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
            bw.Write(buffer, 0, buffer.Length);
         }
 #endif
+        bufferLength = bufferLength == Length60Ms ? Length40Ms : Length60Ms;
     }
 }
 Console.WriteLine("RunTime " + stopWatch.Elapsed.Milliseconds);
