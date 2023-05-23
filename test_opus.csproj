@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <Compile Include="../OpusWrapper/Opus/API.cs" />
+    <Compile Include="../OpusWrapper/OpusDecoder.cs" />
+    <Compile Include="../OpusWrapper/OpusEncoder.cs" />
+
+
+    <!-- <Compile Include="../OpusDotNet/API.cs" />
+    <Compile Include="../OpusDotNet/Application.cs" />
+    <Compile Include="../OpusDotNet/Bandwidth.cs" />
+    <Compile Include="../OpusDotNet/Control.cs" />
+    <Compile Include="../OpusDotNet/ForceChannels.cs" />
+    <Compile Include="../OpusDotNet/OpusDecoder.cs" />
+    <Compile Include="../OpusDotNet/OpusDotNet.csproj" />
+    <Compile Include="../OpusDotNet/OpusEncoder.cs" />
+    <Compile Include="../OpusDotNet/OpusError.cs" />
+    <Compile Include="../OpusDotNet/OpusException.cs" />
+    <Compile Include="../OpusDotNet/SafeDecoderHandle.cs" />
+    <Compile Include="../OpusDotNet/SafeEncoderHandle.cs" /> -->
+
+
+  </ItemGroup>
+</Project>
