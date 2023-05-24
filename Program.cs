@@ -35,9 +35,6 @@ OpusDecoder _decoder = OpusDecoder.Create(16000, 1);
 // Follow
 
 
-int _segmentFrames = (16000 / 1000) * 40;
-int _bytesPerSegment = _encoder.FrameByteCount(_segmentFrames);
-
 byte[] _notEncodedBuffer = new byte[0];
 ulong _bytesSent = 0;
 
@@ -45,8 +42,13 @@ ulong _bytesSent = 0;
 var destEncodedDecodedFile = "destEncodedDecodedFile.raw";
 if(File.Exists(destEncodedDecodedFile))
     File.Delete(destEncodedDecodedFile);
-void EncodeDecodeData(byte[] Buffer, int BytesRecorded)
+void EncodeDecodeData(byte[] Buffer, int BytesRecorded, int msecsData)
 {
+
+    int _segmentFrames = (16000 / 1000) * msecsData;
+    int _bytesPerSegment = _encoder.FrameByteCount(_segmentFrames);
+
+
     byte[] soundBuffer = new byte[BytesRecorded + _notEncodedBuffer.Length];
     for (int i = 0; i < _notEncodedBuffer.Length; i++)
         soundBuffer[i] = _notEncodedBuffer[i];
@@ -110,7 +112,7 @@ using (var inFileSteam = new FileStream(sourceFile, FileMode.Open))
     {
 #if true
         //Console.WriteLine($"Pcm buffer.Length is: {bytesRead}");
-        EncodeDecodeData(buffer, bytesRead);
+        EncodeDecodeData(buffer, bytesRead, bufferLength == Length60Ms ? 60 : 40);
 #else
 
         using (var fileStream = new FileStream(destFile, FileMode.Append, FileAccess.Write, FileShare.None))
